@@ -92,7 +92,7 @@
 
     /* SECTION 2: HERO */
     #hero-wrapper {
-      height: 300vh;
+      height: 100vh;
       margin: 0;
       padding: 0;
       background: transparent;
@@ -940,23 +940,35 @@
       frames[i] = img;
     }
 
-    window.addEventListener('scroll', () => {
-      if (!raf) {
-        requestAnimationFrame(() => {
-          const w = document.getElementById('hero-wrapper');
-          const scrolled = Math.max(0, -w.getBoundingClientRect().top);
-          const total = w.offsetHeight - window.innerHeight;
-          const progress = Math.min(scrolled / total, 1);
-          const idx = Math.min(
-            Math.floor(progress * (TOTAL_FRAMES - 1)),
-            TOTAL_FRAMES - 1
-          );
-          draw(idx);
-          raf = false;
-        });
-        raf = true;
+    // Auto-play hero animation at ~24fps while hero is on-screen
+    let heroPlaying = false;
+    let heroRaf = null;
+    let heroFrameIndex = 0;
+    const FPS = 24;
+    const FRAME_INTERVAL = 1000 / FPS;
+    let lastFrameTime = 0;
+
+    function heroLoop(timestamp) {
+      if (!heroPlaying) return;
+      if (timestamp - lastFrameTime >= FRAME_INTERVAL) {
+        draw(heroFrameIndex);
+        heroFrameIndex = (heroFrameIndex + 1) % TOTAL_FRAMES;
+        lastFrameTime = timestamp;
       }
-    }, { passive: true });
+      heroRaf = requestAnimationFrame(heroLoop);
+    }
+
+    const heroObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        heroPlaying = true;
+        heroRaf = requestAnimationFrame(heroLoop);
+      } else {
+        heroPlaying = false;
+        if (heroRaf) cancelAnimationFrame(heroRaf);
+      }
+    }, { threshold: 0.1 });
+
+    heroObserver.observe(document.getElementById('hero-wrapper'));
 
     // SECTION 3: ANTIGRAVITY
     const floatPhotos = [
