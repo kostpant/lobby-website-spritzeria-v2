@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Λόμπι Spritzeria | Κόρινθος</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --dark: #1A1208;
+      --darker: #0D0A05;
+      --amber: #C4813A;
+      --gold: #D4A853;
+      --ink: #2C2416;
+      --sage: #8A8A7A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F5F0E8;
+      color: var(--cream);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* SECTION 1: PRELOADER */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease;
+    }
+
+    #preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .preloader-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      color: var(--ink);
+      letter-spacing: 2px;
+    }
+
+    .preloader-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      letter-spacing: 6px;
+      color: var(--sage);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .progress-container {
+      width: 200px;
+      height: 3px;
+      background: rgba(44, 36, 22, 0.15);
+      margin-top: 32px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    #progress-fill {
+      height: 100%;
+      width: 0px;
+      background: var(--amber);
+      transition: width 0.1s ease;
+    }
+
+    /* SECTION 2: HERO */
+    #hero-wrapper {
+      height: 300vh;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    #hero-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      z-index: 1;
+      background: #F5F0E8;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #F5F0E8;
+    }
+
+    #hero-wrapper + * {
+      margin-top: 0;
+    }
+
+    #antigravity-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    /* SECTION 3: ANTIGRAVITY ANIMATION */
+    @keyframes floatUp {
+      0% { transform: translateY(80px) translateX(0) rotate(0deg); opacity: 0; }
+      8% { opacity: 0.75; }
+      50% { transform: translateY(-50vh) translateX(28px) rotate(180deg); opacity: 0.55; }
+      92% { opacity: 0.25; }
+      100% { transform: translateY(-110vh) translateX(-18px) rotate(360deg); opacity: 0; }
+    }
+
+    /* GPU Acceleration */
+    .float-photo,
+    .float-svg {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    /* SECTION 4: CONCEPT */
+    #concept {
+      background: var(--dark);
+      padding: 40px 40px 60px;
+      margin-top: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    #concept, #menu {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .concept-divider {
+      width: 80px;
+      border: 1px solid var(--gold);
+      margin: 20px auto;
+    }
+
+    .concept-line {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 6vw, 72px);
+      letter-spacing: 0.04em;
+      margin: 24px 0;
+      text-align: center;
+      width: 100%;
+    }
+
+    .concept-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 20px;
+      color: var(--sage);
+      max-width: 560px;
+      margin: 20px auto 0;
+      line-height: 1.8;
+    }
+
+    /* SECTION 5: MENU */
+    #menu {
+      background: var(--dark);
+      padding: 60px 40px 80px;
+    }
+
+    .menu-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      color: var(--cream);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .menu-column h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .menu-column-header {
+      border-bottom: 2px solid var(--amber);
+      width: 40px;
+      margin: 0 auto 32px;
+    }
+
+    .menu-card {
+      border: 1px solid rgba(44,36,22,0.8);
+      padding: 22px 24px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .menu-card:hover {
+      box-shadow: 0 0 28px rgba(196,129,58,0.2);
+      border-color: rgba(196,129,58,0.4);
+    }
+
+    .menu-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--cream);
+    }
+
+    .menu-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--sage);
+      margin-top: 4px;
+    }
+
+    .menu-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--gold);
+      white-space: nowrap;
+      margin-left: 16px;
+    }
+
+    /* SECTION 6: ATMOSPHERE */
+    #atmosphere {
+      background: var(--dark);
+      padding: 80px 40px;
+    }
+
+    .atmosphere-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      color: var(--cream);
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 300px;
+      gap: 8px;
+      padding: 0 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .gallery-item:nth-child(5n) {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 200px;
+        padding: 0 16px;
+      }
+      .gallery-item:nth-child(5n) {
+        grid-column: span 1;
+      }
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      will-change: transform;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.07);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 40%, rgba(196,129,58,0.55));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--cream);
+    }
+
+    /* LIGHTBOX */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.94);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lightbox-content img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 36px;
+      color: var(--cream);
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 50px;
+      color: var(--cream);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 20px;
+      transition: color 0.2s ease;
+    }
+
+    .lightbox-nav:hover {
+      color: var(--amber);
+    }
+
+    .lightbox-prev {
+      left: 20px;
+    }
+
+    .lightbox-next {
+      right: 20px;
+    }
+
+    /* SECTION 7: LOCATION */
+    #location {
+      background: var(--dark);
+      padding: 80px 40px;
+    }
+
+    /* General section spacing reset */
+    section {
+      padding: 80px 40px;
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 60px 20px;
+      }
+    }
+
+    /* Concept Mobile */
+    @media (max-width: 768px) {
+      #concept {
+        padding: 60px 20px;
+      }
+      .concept-line {
+        font-size: clamp(24px, 7vw, 36px);
+        text-align: center;
+        line-height: 1.4;
+      }
+      #concept p {
+        font-size: 15px;
+        line-height: 1.8;
+        padding: 0 8px;
+        text-align: center;
+      }
+    }
+
+    /* Menu Mobile */
+    @media (max-width: 768px) {
+      #menu {
+        padding: 60px 16px 80px;
+      }
+      #menu h2 {
+        font-size: 34px;
+        text-align: center;
+      }
+      .menu-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+      }
+      .menu-column {
+        width: 100%;
+        margin-bottom: 40px;
+      }
+      .menu-column h3 {
+        font-size: 22px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .menu-card {
+        padding: 14px 16px;
+        margin-bottom: 8px;
+      }
+      .menu-name {
+        font-size: 15px;
+      }
+      .menu-desc {
+        font-size: 12px;
+      }
+      .menu-price {
+        font-size: 14px;
+        margin-left: 12px;
+        white-space: nowrap;
+      }
+    }
+
+    /* Gallery Mobile */
+    @media (max-width: 768px) {
+      #atmosphere {
+        padding: 60px 12px;
+      }
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 160px;
+        gap: 4px;
+        padding: 0;
+      }
+      .gallery-item:nth-child(n) {
+        grid-column: span 1 !important;
+      }
+      .gallery-label {
+        font-size: 12px;
+        padding: 8px;
+      }
+      #atmosphere h2 {
+        font-size: 34px;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+    }
+
+    /* Location Mobile */
+    @media (max-width: 768px) {
+      #location {
+        padding: 60px 20px;
+      }
+      .location-grid {
+        display: flex;
+        flex-direction: column;
+      }
+      .location-info {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .location-info h3 {
+        font-size: 34px;
+      }
+      .location-info p,
+      .location-info a {
+        font-size: 15px;
+        line-height: 2.2;
+      }
+      iframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+      }
+    }
+
+    /* Footer Mobile */
+    @media (max-width: 768px) {
+      footer {
+        padding: 60px 20px 40px;
+        text-align: center;
+      }
+      .footer-logo {
+        font-size: 38px;
+      }
+      footer p,
+      footer a,
+      footer span {
+        font-size: 13px;
+        line-height: 2;
+      }
+      .footer-tagline {
+        font-size: 14px;
+        padding: 0 16px;
+      }
+    }
+
+    /* Lightbox Mobile */
+    @media (max-width: 768px) {
+      #lightbox img {
+        max-width: 95vw;
+        max-height: 80vh;
+      }
+      #lightbox-prev,
+      #lightbox-next {
+        font-size: 28px;
+        padding: 12px 16px;
+      }
+      #lightbox-close {
+        font-size: 28px;
+        top: 12px;
+        right: 16px;
+      }
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .location-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .location-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      color: var(--cream);
+      margin-bottom: 32px;
+    }
+
+    .location-info {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--sage);
+      line-height: 2;
+    }
+
+    .location-info .instagram {
+      color: var(--amber);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .location-info .instagram:hover {
+      color: var(--gold);
+    }
+
+    .map-frame iframe {
+      width: 100%;
+      height: 380px;
+      border: none;
+      display: block;
+      filter: sepia(0.4) contrast(1.1) brightness(0.85);
+    }
+
+    /* SECTION 8: FOOTER */
+    footer {
+      background: var(--darker);
+      padding: 80px 40px 40px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      color: var(--cream);
+    }
+
+    .footer-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      letter-spacing: 7px;
+      color: var(--sage);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .footer-divider {
+      width: 80px;
+      border: 1px solid var(--gold);
+      margin: 32px auto;
+    }
+
+    .footer-info {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--sage);
+    }
+
+    .footer-instagram {
+      color: var(--amber);
+      text-decoration: none;
+      margin-top: 12px;
+      display: block;
+      transition: color 0.2s ease;
+    }
+
+    .footer-instagram:hover {
+      color: var(--gold);
+    }
+
+    .footer-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--sage);
+      margin-top: 28px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+    }
+
+    .footer-copyright {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(138,138,122,0.5);
+      margin-top: 48px;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SECTION 1: PRELOADER -->
+  <div id="preloader">
+    <div class="preloader-logo">Λόμπι</div>
+    <div class="preloader-sub">SPRITZERIA</div>
+    <div class="progress-container">
+      <div id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: HERO -->
+  <div id="hero-wrapper">
+    <div id="hero-sticky">
+      <canvas id="hero-canvas"></canvas>
+      <div id="antigravity-container"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: CONCEPT -->
+  <section id="concept" class="reveal">
+    <hr class="concept-divider">
+    <div class="concept-line">
+      <span style="color:var(--gold)">coffee</span>
+      <span style="color:var(--sage)"> | </span>
+      <span style="color:var(--amber)">spritz</span>
+      <span style="color:var(--sage)"> | </span>
+      <span style="color:var(--cream)">vibe</span>
+    </div>
+    <hr class="concept-divider">
+    <p class="concept-text">Ένας χώρος που δεν βιάζεται. Ο καφές σου σε περιμένει, το spritz σου κρυώνει στο ποτήρι, και η μέρα έχει ακόμα χρόνο.</p>
+  </section>
+
+  <!-- SECTION 5: MENU -->
+  <section id="menu" class="reveal">
+    <h2 class="menu-title">Το Μενού</h2>
+    <div class="menu-grid">
+      <div class="menu-column">
+        <h3>Καφές</h3>
+        <div class="menu-column-header"></div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Espresso</div>
+            <div class="menu-desc">κλασικό & αμετανόητο</div>
+          </div>
+          <span class="menu-price">€2.50</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Freddo Espresso</div>
+            <div class="menu-desc">παγωμένος, δυνατός</div>
+          </div>
+          <span class="menu-price">€3.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Cappuccino</div>
+            <div class="menu-desc">βελούδινος αφρός</div>
+          </div>
+          <span class="menu-price">€3.50</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Filter Coffee</div>
+            <div class="menu-desc">αργό & αναλογικό</div>
+          </div>
+          <span class="menu-price">€3.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Cold Brew</div>
+            <div class="menu-desc">18 ώρες ψυχρής εκχύλισης</div>
+          </div>
+          <span class="menu-price">€4.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Espresso Tonic</div>
+            <div class="menu-desc">τολμηρός συνδυασμός</div>
+          </div>
+          <span class="menu-price">€4.50</span>
+        </div>
+      </div>
+      <div class="menu-column">
+        <h3>Spritz & Cocktails</h3>
+        <div class="menu-column-header"></div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Aperol Spritz</div>
+            <div class="menu-desc">Aperol, Prosecco, soda</div>
+          </div>
+          <span class="menu-price">€8.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Hugo Spritz</div>
+            <div class="menu-desc">elderflower, prosecco, μέντα</div>
+          </div>
+          <span class="menu-price">€8.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Lobby Signature</div>
+            <div class="menu-desc">house recipe, mystery</div>
+          </div>
+          <span class="menu-price">€9.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Campari Spritz</div>
+            <div class="menu-desc">bitter, bold, beautiful</div>
+          </div>
+          <span class="menu-price">€8.00</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Limoncello Spritz</div>
+            <div class="menu-desc">ζωηρό & καλοκαιρινό</div>
+          </div>
+          <span class="menu-price">€8.50</span>
+        </div>
+        <div class="menu-card">
+          <div>
+            <div class="menu-name">Virgin Spritz</div>
+            <div class="menu-desc">all the vibe, zero alcohol</div>
+          </div>
+          <span class="menu-price">€6.00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: ATMOSPHERE -->
+  <section id="atmosphere" class="reveal">
+    <h2 class="atmosphere-title">Η Ατμόσφαιρα</h2>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </section>
+
+  <!-- SECTION 7: LOCATION -->
+  <section id="location" class="reveal">
+    <div class="location-grid">
+      <div class="location-info">
+        <h3 class="location-title">Βρείτε μας</h3>
+        <p>📍 Κολοκοτρώνη 2, Κόρινθος 20100</p>
+        <p>🕘 Καθημερινά: 09:00 – αργά το βράδυ</p>
+        <p>📷 <a href="https://instagram.com/lobby_spritzeria" target="_blank" class="instagram">@lobby_spritzeria</a></p>
+      </div>
+      <div class="map-frame">
+        <iframe src="https://maps.google.com/maps?q=Kolokotroni+2,+Corinth+20100,+Greece&output=embed" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: FOOTER -->
+  <footer class="reveal">
+    <div class="footer-logo">Λόμπι</div>
+    <div class="footer-sub">SPRITZERIA</div>
+    <hr class="footer-divider">
+    <p class="footer-info">Κολοκοτρώνη 2, Κόρινθος · 09:00 – αργά</p>
+    <a href="https://instagram.com/lobby_spritzeria" target="_blank" class="footer-instagram">@lobby_spritzeria</a>
+    <p class="footer-tagline">Ανάμεσα σε δυο σιωπές, μια γουλιά αρκεί για να ισορροπήσει ο κόσμος.</p>
+    <p class="footer-copyright">© 2026 Λόμπι Spritzeria. All rights reserved.</p>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&#8249;</button>
+    <div class="lightbox-content" id="lightbox-content"></div>
+    <button class="lightbox-nav lightbox-next" id="lightbox-next">&#8250;</button>
+  </div>
+
+  <script>
+    /* 
+      DEVELOPER SETUP CHECKLIST:
+      1. Set TOTAL_FRAMES to actual count of files 
+         in /hero_animation/ folder (currently 240)
+      2. Replace all truncated ...jpg filenames 
+         with full actual filenames from folder
+      3. MP4 file is NOT used — confirmed excluded
+      4. Test preloader: Chrome DevTools → 
+         Network → Slow 3G throttle
+      5. All paths are relative — open via 
+         local server not file:// protocol
+         (VS Code Live Server recommended)
+    */
+
+    // SECTION 2: HERO - CLEAN IMPLEMENTATION
+    const TOTAL_FRAMES = 240;
+    const frames = [];
+    let loadedCount = 0;
+    let currentIndex = 0;
+    let raf = false;
+
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function setSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    setSize();
+    window.addEventListener('resize', setSize);
+
+    function draw(i) {
+      const img = frames[i];
+      if (!img || !img.complete) return;
+      const s = Math.max(
+        canvas.width / img.naturalWidth,
+        canvas.height / img.naturalHeight
+      );
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img,
+        (canvas.width - img.naturalWidth * s) / 2,
+        (canvas.height - img.naturalHeight * s) / 2,
+        img.naturalWidth * s,
+        img.naturalHeight * s
+      );
+    }
+
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const n = String(i + 1).padStart(3, '0');
+      img.src = `./hero_animation/ezgif-frame-${n}.jpg`;
+      img.onload = () => {
+        loadedCount++;
+        const pct = loadedCount / TOTAL_FRAMES;
+        const bar = document.getElementById('progress-fill');
+        if (bar) bar.style.width = (pct * 200) + 'px';
+        if (loadedCount === TOTAL_FRAMES) {
+          const pre = document.getElementById('preloader');
+          if (pre) pre.classList.add('hidden');
+          draw(0);
+        }
+      };
+      frames[i] = img;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!raf) {
+        requestAnimationFrame(() => {
+          const w = document.getElementById('hero-wrapper');
+          const scrolled = Math.max(0, -w.getBoundingClientRect().top);
+          const total = w.offsetHeight - window.innerHeight;
+          const progress = Math.min(scrolled / total, 1);
+          const idx = Math.min(
+            Math.floor(progress * (TOTAL_FRAMES - 1)),
+            TOTAL_FRAMES - 1
+          );
+          draw(idx);
+          raf = false;
+        });
+        raf = true;
+      }
+    }, { passive: true });
+
+    // SECTION 3: ANTIGRAVITY
+    const floatPhotos = [
+      { file: 'lobby_spritzeria_1762507812_3760510545775062970_78326456204.jpg', size: 72, left: 8, delay: 0, dur: 11 },
+      { file: 'lobby_spritzeria_1766401839_3793176012851301186_78326456204.jpg', size: 90, left: 22, delay: 2, dur: 14 },
+      { file: 'lobby_spritzeria_1766481799_3793846770443270630_78326456204.jpg', size: 82, left: 50, delay: 4.5, dur: 9 },
+      { file: 'lobby_spritzeria_1767008753_3798267178290560926_78326456204.jpg', size: 68, left: 72, delay: 1.5, dur: 13 },
+      { file: 'lobby_spritzeria_1767171989_3799636503916233482_78326456204.jpg', size: 78, left: 87, delay: 6, dur: 10 }
+    ];
+
+    const svgShapes = [
+      { svg: '<circle cx="12" cy="12" r="12" fill="none" stroke="#C4813A" stroke-width="1.5"/>', size: 25, left: 15, delay: 0.5, dur: 8 },
+      { svg: '<circle cx="15" cy="15" r="12" fill="none" stroke="#C4813A" stroke-width="1.5"/>', size: 30, left: 35, delay: 3, dur: 12 },
+      { svg: '<circle cx="10" cy="10" r="8" fill="none" stroke="#C4813A" stroke-width="1.5"/>', size: 22, left: 55, delay: 1, dur: 10 },
+      { svg: '<path d="M15 3 L22 15 L15 27 L8 15 Z" fill="#C4813A"/>', size: 30, left: 75, delay: 5, dur: 15 },
+      { svg: '<path d="M12 2 L17 12 L12 22 L7 12 Z" fill="#C4813A"/>', size: 25, left: 90, delay: 7, dur: 9 },
+      { svg: '<ellipse cx="10" cy="14" rx="6" ry="10" fill="#2C2416"/><ellipse cx="10" cy="14" rx="1" ry="6" fill="#1A1208"/>', size: 25, left: 5, delay: 2.5, dur: 11 },
+      { svg: '<ellipse cx="8" cy="12" rx="5" ry="8" fill="#2C2416"/><ellipse cx="8" cy="12" rx="1" ry="5" fill="#1A1208"/>', size: 20, left: 42, delay: 4, dur: 7 },
+      { svg: '<path d="M8 4 L10 12 L16 10 L10 16 L8 24 L6 16 L0 12 L6 10 Z" fill="#8A8A7A"/>', size: 25, left: 63, delay: 8, dur: 13 },
+      { svg: '<path d="M7 3 L9 11 L14 9 L9 15 L7 23 L5 15 L0 11 L5 9 Z" fill="#8A8A7A"/>', size: 22, left: 28, delay: 6, dur: 10 },
+      { svg: '<path d="M10 2 L12 12 L20 10 L12 18 L10 28 L8 18 L0 10 L8 12 Z" fill="#8A8A7A"/>', size: 28, left: 80, delay: 3.5, dur: 14 }
+    ];
+
+    function setupAntigravity() {
+      const container = document.getElementById('antigravity-container');
+
+      floatPhotos.forEach(p => {
+        const img = document.createElement('img');
+        img.src = `./lobby_spritzeria_images/${p.file}`;
+        img.style.cssText = `position:absolute;width:${p.size}px;height:${p.size}px;border-radius:50%;object-fit:cover;left:${p.left}%;bottom:-100px;border:2px solid rgba(196,129,58,0.5);box-shadow:0 0 25px rgba(196,129,58,0.3);animation:floatUp ${p.dur}s ease-in-out ${p.delay}s infinite;`;
+        container.appendChild(img);
+      });
+
+      svgShapes.forEach(shape => {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 30 30');
+        svg.style.cssText = `position:absolute;width:${shape.size}px;height:${shape.size}px;left:${shape.left}%;bottom:-50px;animation:floatUp ${shape.dur}s ease-in-out ${shape.delay}s infinite;`;
+        svg.innerHTML = shape.svg;
+        container.appendChild(svg);
+      });
+    }
+
+    setupAntigravity();
+
+    // SECTION 6: GALLERY
+    const galleryImages = [
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1762507812_3760510545775062970_78326456204.jpg', label: 'Aperol Hours' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1766401839_3793176012851301186_78326456204.jpg', label: 'The Pour' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1766401839_3793176012851282539_78326456204.jpg', label: 'Πρωινό' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1766481799_3793846770443270630_78326456204.jpg', label: 'Κουζίνα' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1766481799_3793846770460063896_78326456204.jpg', label: 'Late Night' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1766746322_3796065743930932528_78326456204.jpg', label: 'Λόμπι' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1767008753_3798267178290560926_78326456204.jpg', label: 'Spritz Time' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1767171989_3799636503916233482_78326456204.jpg', label: 'Vibe' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1767432443_3801821345525295789_78326456204.jpg', label: 'Moments' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1767698280_3804051350418395338_78326456204.jpg', label: 'Κόρινθος' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1767863619_3805438311817304485_78326456204.jpg', label: 'Golden Hour' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1768035776_3806882469253794934_78326456204.jpg', label: 'Καφές' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1768296237_3809067378550549495_78326456204.jpg', label: 'Summer' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1768477520_3810588085910508768_78326456204.jpg', label: 'Evening' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1768643104_3811977104900775236_78326456204.jpg', label: 'Night' },
+      { src: './lobby_spritzeria_images/lobby_spritzeria_1768643104_3811977104900786452_78326456204.jpg', label: 'Cheers' }
+    ];
+
+    function buildGallery() {
+      const grid = document.getElementById('gallery-grid');
+      galleryImages.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item';
+        div.innerHTML = `<img data-src="${item.src}" alt="${item.label}" loading="lazy" decoding="async"><div class="gallery-overlay"><span class="gallery-label">${item.label}</span></div>`;
+        div.addEventListener('click', () => openLightbox(index));
+        grid.appendChild(div);
+      });
+    }
+
+    buildGallery();
+
+    // LAZY LOADING
+    const lazyObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const img = e.target.querySelector('img');
+          if (img && img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          lazyObserver.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      lazyObserver.observe(item);
+    });
+
+    // LIGHTBOX
+    let lightboxIndex = 0;
+
+    function openLightbox(index) {
+      lightboxIndex = index;
+      updateLightboxContent();
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxContent() {
+      const content = document.getElementById('lightbox-content');
+      content.innerHTML = `<img src="${galleryImages[lightboxIndex].src}" alt="${galleryImages[lightboxIndex].label}">`;
+    }
+
+    function prevPhoto() {
+      lightboxIndex = (lightboxIndex - 1 + galleryImages.length) % galleryImages.length;
+      updateLightboxContent();
+    }
+
+    function nextPhoto() {
+      lightboxIndex = (lightboxIndex + 1) % galleryImages.length;
+      updateLightboxContent();
+    }
+
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox-prev').addEventListener('click', prevPhoto);
+    document.getElementById('lightbox-next').addEventListener('click', nextPhoto);
+
+    document.getElementById('lightbox').addEventListener('click', (e) => {
+      if (e.target.id === 'lightbox') closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('lightbox').classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prevPhoto();
+      if (e.key === 'ArrowRight') nextPhoto();
+    });
+
+    // Lightbox touch swipe
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) nextPhoto();
+        else prevPhoto();
+      }
+    }, { passive: true });
+
+    // SCROLL REVEAL
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  </script>
+</body>
+</html>
