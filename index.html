@@ -95,7 +95,7 @@
 
     /* SECTION 2: HERO */
     #hero-sentinel {
-      height: 100vh;
+      height: 150vh;
       visibility: hidden;
       pointer-events: none;
     }
@@ -1003,7 +1003,8 @@
       requestAnimationFrame(() => {
         try {
           const scrollY = window.scrollY;
-          const maxScroll = window.innerHeight;
+          const sentinel = document.getElementById('hero-sentinel');
+          const maxScroll = sentinel ? sentinel.offsetHeight : window.innerHeight;
           const progress = Math.min(scrollY / maxScroll, 1);
           const idx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
           draw(idx);
