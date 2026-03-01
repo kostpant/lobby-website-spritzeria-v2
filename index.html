@@ -190,7 +190,7 @@
     }
 
     .concept-line {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: clamp(32px, 6vw, 72px);
       letter-spacing: 0.04em;
       margin: 24px 0;
@@ -199,7 +199,7 @@
     }
 
     .concept-text {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: 20px;
       color: var(--sage);
@@ -215,7 +215,7 @@
     }
 
     .menu-title {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 48px;
       color: var(--cream);
       text-align: center;
@@ -237,7 +237,7 @@
     }
 
     .menu-column h3 {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 28px;
       color: var(--gold);
       text-align: center;
@@ -269,7 +269,7 @@
     }
 
     .menu-name {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 18px;
       color: var(--cream);
     }
@@ -282,7 +282,7 @@
     }
 
     .menu-price {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 17px;
       color: var(--gold);
       white-space: nowrap;
@@ -296,7 +296,7 @@
     }
 
     .atmosphere-title {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 48px;
       color: var(--cream);
       text-align: center;
@@ -366,7 +366,7 @@
     }
 
     .gallery-label {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 17px;
       color: var(--cream);
     }
@@ -601,12 +601,7 @@
 
       .footer-tagline {
         font-size: 14px;
-        padding: 0 24px;
-        max-width: 100%;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        white-space: normal;
-        box-sizing: border-box;
+        padding: 0 16px;
       }
     }
 
@@ -646,7 +641,7 @@
     }
 
     .location-title {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-size: 36px;
       color: var(--cream);
       margin-bottom: 32px;
@@ -726,7 +721,7 @@
     }
 
     .footer-tagline {
-      font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+      font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: 16px;
       color: var(--sage);
@@ -973,12 +968,14 @@
       if (!img || !img.complete) return;
       lastDrawnIdx = i;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Cover: fill the entire screen, centered
+      // Cover: fill the entire screen
+      // Portrait: shift down 4% so top words have breathing room from the screen edge
       const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
       const dw = Math.round(img.naturalWidth * s);
       const dh = Math.round(img.naturalHeight * s);
+      const isPortrait = canvas.height > canvas.width;
       const dx = Math.round((canvas.width - dw) / 2);
-      const dy = Math.round((canvas.height - dh) / 2);
+      const dy = Math.round((canvas.height - dh) / 2) + (isPortrait ? Math.round(canvas.height * 0.04) : 0);
       ctx.drawImage(img, dx, dy, dw, dh);
     }
 
