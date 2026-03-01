@@ -113,7 +113,8 @@
     }
 
     #hero-fixed.done {
-      display: none;
+      opacity: 0 !important;
+      pointer-events: none;
     }
 
     #hero-canvas {
@@ -976,15 +977,15 @@
       const isPortrait = canvas.height > canvas.width;
 
       if (isPortrait) {
-        // The user's video frames have a baked-in "header" text at the very top.
-        // We crop out the top 15% of the image by shifting it up and scaling it 
-        // proportionally more so it still covers the bottom of the screen to remove it.
-        const cropTop = 0.15;
-        const s = Math.max(canvas.width / img.naturalWidth, canvas.height / (img.naturalHeight * (1 - cropTop)));
+        // Apply a centered 15% zoom (1.15x) to neatly push the top baked-in text
+        // off the top edge, while pushing the bottom edge equally down so the 
+        // main artwork (the "Λόμπι" logo and the hands) remains perfectly centered!
+        const scaleMult = 1.15;
+        const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight) * scaleMult;
         const dw = img.naturalWidth * s;
         const dh = img.naturalHeight * s;
         const dx = (canvas.width - dw) / 2;
-        const dy = -(dh * cropTop);
+        const dy = (canvas.height - dh) / 2;
         ctx.drawImage(img, dx, dy, dw, dh);
       } else {
         // Desktop / Landscape: standard center cover
@@ -1027,7 +1028,8 @@
           const scrollY = window.scrollY;
           const sentinel = document.getElementById('hero-sentinel');
           const maxScroll = sentinel ? sentinel.offsetHeight : window.innerHeight;
-          const progress = Math.min(scrollY / maxScroll, 1);
+          // Clamp progress between 0 and 1 to prevent negative index on iOS top-bounce
+          const progress = Math.max(0, Math.min(scrollY / maxScroll, 1));
           const idx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
           draw(idx);
 
@@ -1041,10 +1043,11 @@
             }
           }
 
+          // Toggle visibility classes carefully to avoid scroll locking
           if (!heroHidden && scrollY >= maxScroll) {
             heroHidden = true;
             if (hf) { hf.classList.add('done'); hf.style.opacity = ''; }
-          } else if (heroHidden && scrollY < maxScroll * 0.85) {
+          } else if (heroHidden && scrollY < maxScroll * 0.9) {
             heroHidden = false;
             if (hf) hf.classList.remove('done');
           }
