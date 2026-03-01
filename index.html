@@ -968,32 +968,14 @@
       if (!img || !img.complete) return;
       lastDrawnIdx = i;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const isPortrait = canvas.height > canvas.width;
-      if (isPortrait) {
-        // --- PASS 1: blurred ambient background fills the entire canvas ---
-        // Cover-scale the frame and blur it so there are zero white bars
-        const sBg = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-        const bgW = img.naturalWidth * sBg;
-        const bgH = img.naturalHeight * sBg;
-        const bgX = (canvas.width - bgW) / 2;
-        const bgY = (canvas.height - bgH) / 2;
-        ctx.save();
-        ctx.filter = 'blur(22px) saturate(0.6) brightness(0.85)';
-        ctx.drawImage(img, bgX, bgY, bgW, bgH);
-        ctx.restore();
-        // --- PASS 2: sharp foreground — fit-width so both people are visible ---
-        const sFg = canvas.width / img.naturalWidth;
-        const fgH = img.naturalHeight * sFg;
-        const fgY = (canvas.height - fgH) / 2;
-        ctx.drawImage(img, 0, fgY, canvas.width, fgH);
-      } else {
-        // LANDSCAPE / DESKTOP: cover (fills screen, slight side crop)
-        const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-        ctx.drawImage(img,
-          (canvas.width - img.naturalWidth * s) / 2,
-          (canvas.height - img.naturalHeight * s) / 2,
-          img.naturalWidth * s, img.naturalHeight * s);
-      }
+      // Contain: fit the full image, preserving aspect ratio, centered
+      // Both people always visible, cream background fills any remaining space
+      const s = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+      const w = img.naturalWidth * s;
+      const h = img.naturalHeight * s;
+      const x = (canvas.width - w) / 2;
+      const y = (canvas.height - h) / 2;
+      ctx.drawImage(img, x, y, w, h);
     }
 
     for (let i = 0; i < TOTAL_FRAMES; i++) {
