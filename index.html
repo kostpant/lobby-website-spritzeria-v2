@@ -977,15 +977,15 @@
       const isPortrait = canvas.height > canvas.width;
 
       if (isPortrait) {
-        // Apply a centered 15% zoom (1.15x) to neatly push the top baked-in text
-        // off the top edge, while pushing the bottom edge equally down so the 
-        // main artwork (the "Λόμπι" logo and the hands) remains perfectly centered!
-        const scaleMult = 1.15;
+        // Apply 1.22x zoom to ensure top text is pushed off.
+        const scaleMult = 1.22;
         const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight) * scaleMult;
         const dw = img.naturalWidth * s;
         const dh = img.naturalHeight * s;
-        const dx = (canvas.width - dw) / 2;
-        const dy = (canvas.height - dh) / 2;
+        // Shift left by 3% of width to perfectly center the visual weight of the logo
+        const dx = (canvas.width - dw) / 2 - (dw * 0.03);
+        // Shift up by an extra 2% to ensure the text fragments are completely hidden
+        const dy = (canvas.height - dh) / 2 - (dh * 0.02);
         ctx.drawImage(img, dx, dy, dw, dh);
       } else {
         // Desktop / Landscape: standard center cover
