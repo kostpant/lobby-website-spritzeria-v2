@@ -108,12 +108,10 @@
       height: 100vh;
       z-index: 100;
       background: #F5F0E8;
-      transition: opacity 0.15s ease;
     }
 
     #hero-fixed.done {
-      opacity: 0;
-      pointer-events: none;
+      display: none;
     }
 
     #hero-canvas {
@@ -949,9 +947,12 @@
     const canvas = document.getElementById('hero-canvas');
     const ctx = canvas.getContext('2d');
 
+    let lastDrawnIdx = 0;
+
     function setSize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      draw(lastDrawnIdx); // redraw current frame after resize clears canvas
     }
     setSize();
     window.addEventListener('resize', setSize);
@@ -959,6 +960,7 @@
     function draw(i) {
       const img = frames[i];
       if (!img || !img.complete) return;
+      lastDrawnIdx = i;
       const s = Math.max(
         canvas.width / img.naturalWidth,
         canvas.height / img.naturalHeight
@@ -990,19 +992,31 @@
       frames[i] = img;
     }
 
-    // Scroll-driven animation: scrollY 0→100vh = frames 0→239, then hero hides
+    // Scroll-driven animation: scrollY 0→100vh = frames 0→239
+    // Hysteresis: hide hero at >=100vh, re-show at <90vh (prevents flicker at boundary)
+    const hf = document.getElementById('hero-fixed');
+    let heroHidden = false;
+
     window.addEventListener('scroll', () => {
       if (raf) return;
       raf = true;
       requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        const maxScroll = window.innerHeight;
-        const progress = Math.min(scrollY / maxScroll, 1);
-        const idx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
-        draw(idx);
-        const hf = document.getElementById('hero-fixed');
-        if (hf) hf.classList.toggle('done', scrollY >= maxScroll);
-        raf = false;
+        try {
+          const scrollY = window.scrollY;
+          const maxScroll = window.innerHeight;
+          const progress = Math.min(scrollY / maxScroll, 1);
+          const idx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
+          draw(idx);
+          if (!heroHidden && scrollY >= maxScroll) {
+            heroHidden = true;
+            if (hf) hf.classList.add('done');
+          } else if (heroHidden && scrollY < maxScroll * 0.9) {
+            heroHidden = false;
+            if (hf) hf.classList.remove('done');
+          }
+        } finally {
+          raf = false;
+        }
       });
     }, { passive: true });
 
