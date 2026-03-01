@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=block"
     rel="stylesheet">
   <style>
     :root {
@@ -968,12 +968,15 @@
       if (!img || !img.complete) return;
       lastDrawnIdx = i;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Single layer: cover-scale fills the full screen, centered
+      // Cover: fill the entire screen
+      // Portrait: shift down 4% so top words have breathing room from the screen edge
       const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      ctx.drawImage(img,
-        (canvas.width - img.naturalWidth * s) / 2,
-        (canvas.height - img.naturalHeight * s) / 2,
-        img.naturalWidth * s, img.naturalHeight * s);
+      const dw = Math.round(img.naturalWidth * s);
+      const dh = Math.round(img.naturalHeight * s);
+      const isPortrait = canvas.height > canvas.width;
+      const dx = Math.round((canvas.width - dw) / 2);
+      const dy = Math.round((canvas.height - dh) / 2) + (isPortrait ? Math.round(canvas.height * 0.04) : 0);
+      ctx.drawImage(img, dx, dy, dw, dh);
     }
 
     for (let i = 0; i < TOTAL_FRAMES; i++) {
