@@ -94,21 +94,26 @@
     }
 
     /* SECTION 2: HERO */
-    #hero-wrapper {
-      height: 200vh;
-      margin: 0;
-      padding: 0;
-      background: transparent;
+    #hero-sentinel {
+      height: 100vh;
+      visibility: hidden;
+      pointer-events: none;
     }
 
-    #hero-sticky {
-      position: sticky;
+    #hero-fixed {
+      position: fixed;
       top: 0;
-      height: 100vh;
+      left: 0;
       width: 100%;
-      overflow: hidden;
-      z-index: 1;
+      height: 100vh;
+      z-index: 100;
       background: #F5F0E8;
+      transition: opacity 0.15s ease;
+    }
+
+    #hero-fixed.done {
+      opacity: 0;
+      pointer-events: none;
     }
 
     #hero-canvas {
@@ -118,10 +123,6 @@
       height: 100%;
       display: block;
       background: #F5F0E8;
-    }
-
-    #hero-wrapper+* {
-      margin-top: 0;
     }
 
     #antigravity-container {
@@ -761,11 +762,10 @@
   </div>
 
   <!-- SECTION 2: HERO -->
-  <div id="hero-wrapper">
-    <div id="hero-sticky">
-      <canvas id="hero-canvas"></canvas>
-      <div id="antigravity-container"></div>
-    </div>
+  <div id="hero-sentinel"></div>
+  <div id="hero-fixed">
+    <canvas id="hero-canvas"></canvas>
+    <div id="antigravity-container"></div>
   </div>
 
   <!-- SECTION 4: CONCEPT -->
@@ -990,19 +990,18 @@
       frames[i] = img;
     }
 
-    // Scroll-driven frame animation (scroll 1 viewport height = full 240-frame sequence)
+    // Scroll-driven animation: scrollY 0→100vh = frames 0→239, then hero hides
     window.addEventListener('scroll', () => {
       if (raf) return;
       raf = true;
       requestAnimationFrame(() => {
-        const w = document.getElementById('hero-wrapper');
-        if (!w) { raf = false; return; }
-        const scrolled = Math.max(0, -w.getBoundingClientRect().top);
-        const total = w.offsetHeight - window.innerHeight;
-        if (total <= 0) { raf = false; return; }
-        const progress = Math.min(scrolled / total, 1);
+        const scrollY = window.scrollY;
+        const maxScroll = window.innerHeight;
+        const progress = Math.min(scrollY / maxScroll, 1);
         const idx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
         draw(idx);
+        const hf = document.getElementById('hero-fixed');
+        if (hf) hf.classList.toggle('done', scrollY >= maxScroll);
         raf = false;
       });
     }, { passive: true });
