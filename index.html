@@ -961,10 +961,12 @@
       const img = frames[i];
       if (!img || !img.complete) return;
       lastDrawnIdx = i;
-      const s = Math.max(
-        canvas.width / img.naturalWidth,
-        canvas.height / img.naturalHeight
-      );
+      // Mobile: fit-width (both people always visible, no side crop)
+      // Desktop: cover (fill screen)
+      const isMobile = canvas.width <= 768;
+      const s = isMobile
+        ? canvas.width / img.naturalWidth
+        : Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img,
         (canvas.width - img.naturalWidth * s) / 2,
