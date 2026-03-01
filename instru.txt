@@ -1,34 +1,26 @@
-Read the index.html file right now.
+The scroll event listener is completely missing 
+from the file. There is no addEventListener scroll 
+anywhere. That is why the animation does not play.
 
-Find these three things and tell me what they are 
-before changing anything:
+Find the JavaScript section in the file.
+Find where the frames are loaded and drawFrame exists.
+Add this scroll listener right after the 
+frame preloading code. Do not change anything else:
 
-1. What is the exact height value of hero-wrapper
-2. What is the exact HTML element that comes 
-   immediately after the closing tag of hero-wrapper
-3. Is there any div with a fixed or absolute position 
-   that has a dark background color anywhere in the file
+window.addEventListener('scroll', function() {
+  var wrapper = document.getElementById('hero-wrapper');
+  if (!wrapper) return;
+  var rect = wrapper.getBoundingClientRect();
+  var scrolled = -rect.top;
+  var total = wrapper.offsetHeight - window.innerHeight;
+  if (scrolled < 0) scrolled = 0;
+  if (total <= 0) return;
+  var progress = scrolled / total;
+  if (progress > 1) progress = 1;
+  var idx = Math.floor(progress * (TOTAL_FRAMES - 1));
+  if (idx > TOTAL_FRAMES - 1) idx = TOTAL_FRAMES - 1;
+  draw(idx);
+}, { passive: true });
 
-After you read and tell me those three things,
-do this one surgical fix:
-
-The blank space is caused by hero-wrapper 
-having extra height with no content showing.
-The canvas is sticky so it pins correctly 
-but the wrapper background underneath is visible 
-and dark.
-
-Set the background of hero-wrapper to transparent:
-background: transparent;
-
-Set the background of body to #F5F0E8 
-so nothing appears dark behind the hero.
-
-Then find the section immediately after 
-hero-wrapper and confirm it has:
-margin-top: 0;
-position: relative;
-z-index: 2;
-
-Do only these changes.
-Tell me what you found before and after.
+Add only this. Nothing else changes.
+No other modifications to the file.
