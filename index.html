@@ -970,10 +970,24 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isPortrait = canvas.height > canvas.width;
       if (isPortrait) {
-        // PORTRAIT: stretch to fill the full screen — zero white bars, zero crop
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        // --- PASS 1: blurred ambient background fills the entire canvas ---
+        // Cover-scale the frame and blur it so there are zero white bars
+        const sBg = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+        const bgW = img.naturalWidth * sBg;
+        const bgH = img.naturalHeight * sBg;
+        const bgX = (canvas.width - bgW) / 2;
+        const bgY = (canvas.height - bgH) / 2;
+        ctx.save();
+        ctx.filter = 'blur(22px) saturate(0.6) brightness(0.85)';
+        ctx.drawImage(img, bgX, bgY, bgW, bgH);
+        ctx.restore();
+        // --- PASS 2: sharp foreground — fit-width so both people are visible ---
+        const sFg = canvas.width / img.naturalWidth;
+        const fgH = img.naturalHeight * sFg;
+        const fgY = (canvas.height - fgH) / 2;
+        ctx.drawImage(img, 0, fgY, canvas.width, fgH);
       } else {
-        // LANDSCAPE / DESKTOP: cover
+        // LANDSCAPE / DESKTOP: cover (fills screen, slight side crop)
         const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
         ctx.drawImage(img,
           (canvas.width - img.naturalWidth * s) / 2,
