@@ -968,14 +968,30 @@
       if (!img || !img.complete) return;
       lastDrawnIdx = i;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Contain: fit the full image, preserving aspect ratio, centered
-      // Both people always visible, cream background fills any remaining space
-      const s = Math.min(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      const w = img.naturalWidth * s;
-      const h = img.naturalHeight * s;
-      const x = (canvas.width - w) / 2;
-      const y = (canvas.height - h) / 2;
-      ctx.drawImage(img, x, y, w, h);
+
+      const isPortrait = canvas.height > canvas.width;
+      if (isPortrait) {
+        // PASS 1: blurred cover background — fills full screen, no white bars
+        const sBg = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+        ctx.save();
+        ctx.filter = 'blur(16px)';
+        ctx.drawImage(img,
+          (canvas.width - img.naturalWidth * sBg) / 2,
+          (canvas.height - img.naturalHeight * sBg) / 2,
+          img.naturalWidth * sBg, img.naturalHeight * sBg);
+        ctx.restore();
+        // PASS 2: sharp image, fit-width, perfectly centered vertically
+        const sFg = canvas.width / img.naturalWidth;
+        const fgH = img.naturalHeight * sFg;
+        ctx.drawImage(img, 0, (canvas.height - fgH) / 2, canvas.width, fgH);
+      } else {
+        // LANDSCAPE / DESKTOP: cover, fills screen
+        const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+        ctx.drawImage(img,
+          (canvas.width - img.naturalWidth * s) / 2,
+          (canvas.height - img.naturalHeight * s) / 2,
+          img.naturalWidth * s, img.naturalHeight * s);
+      }
     }
 
     for (let i = 0; i < TOTAL_FRAMES; i++) {
