@@ -972,12 +972,28 @@
       if (!img || !img.complete) return;
       lastDrawnIdx = i;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Single layer: cover-scale fills the full screen, centered
-      const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      ctx.drawImage(img,
-        (canvas.width - img.naturalWidth * s) / 2,
-        (canvas.height - img.naturalHeight * s) / 2,
-        img.naturalWidth * s, img.naturalHeight * s);
+
+      const isPortrait = canvas.height > canvas.width;
+
+      if (isPortrait) {
+        // The user's video frames have a baked-in "header" text at the very top.
+        // We crop out the top 15% of the image by shifting it up and scaling it 
+        // proportionally more so it still covers the bottom of the screen to remove it.
+        const cropTop = 0.15;
+        const s = Math.max(canvas.width / img.naturalWidth, canvas.height / (img.naturalHeight * (1 - cropTop)));
+        const dw = img.naturalWidth * s;
+        const dh = img.naturalHeight * s;
+        const dx = (canvas.width - dw) / 2;
+        const dy = -(dh * cropTop);
+        ctx.drawImage(img, dx, dy, dw, dh);
+      } else {
+        // Desktop / Landscape: standard center cover
+        const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+        ctx.drawImage(img,
+          (canvas.width - img.naturalWidth * s) / 2,
+          (canvas.height - img.naturalHeight * s) / 2,
+          img.naturalWidth * s, img.naturalHeight * s);
+      }
     }
 
     for (let i = 0; i < TOTAL_FRAMES; i++) {
